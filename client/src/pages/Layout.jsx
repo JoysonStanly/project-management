@@ -5,9 +5,11 @@ import { Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadTheme } from '../features/themeSlice'
 import { Loader2Icon } from 'lucide-react'
+import { SignIn,useUser } from '@clerk/clerk-react'
 
 const Layout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+    const {user,isLoaded} = useUser()
     const { loading } = useSelector((state) => state.workspace)
     const dispatch = useDispatch()
 
@@ -15,6 +17,14 @@ const Layout = () => {
     useEffect(() => {
         dispatch(loadTheme())
     }, [])
+
+    if (!user) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-white dark:bg-zinc-950">
+                <SignIn />
+            </div>
+        )
+    }
 
     if (loading) return (
         <div className='flex items-center justify-center h-screen bg-white dark:bg-zinc-950'>
